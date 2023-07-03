@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const ApiFeatures = require('../utils/apiFeatures');
 const ErrorHandler = require('../utils/errorHandler');
 
 // CREATE PRODUCT -- ADMIN
@@ -119,7 +120,8 @@ exports.getSingleProduct = async (req, res, next) => {
 // GET ALL PRODUCTS
 exports.getAllProduct = async (req, res) => {
     try {
-        const product = await Product.find()
+        const apiFeatures = new ApiFeatures(Product.find(), req.query).search()
+        const product = await apiFeatures.query;
         res.status(200).json({
             success: true,
             data: {
