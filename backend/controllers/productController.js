@@ -105,7 +105,7 @@ exports.getSingleProduct = async (req, res, next) => {
             //         message: error.message
             //     },
             // });
-       }
+        }
 
         res.status(400).json({
             success: false,
@@ -120,13 +120,21 @@ exports.getSingleProduct = async (req, res, next) => {
 // GET ALL PRODUCTS
 exports.getAllProduct = async (req, res) => {
     try {
-        const apiFeatures = new ApiFeatures(Product.find(), req.query).search().filter()
-        const product = await apiFeatures.query;
+        const resultPerPage = 5;
+        const productCount = await Product.countDocuments()
+
+        const apiFeatures = new ApiFeatures(Product.find(), req.query)
+            .search()
+            .filter()
+            .pagination(resultPerPage)
+
+        const product = await apiFeatures;
         res.status(200).json({
             success: true,
             data: {
                 message: "All Product fetched successfully",
-                data: product
+                data: product,
+                count: productCount
             }
         })
     } catch (error) {
