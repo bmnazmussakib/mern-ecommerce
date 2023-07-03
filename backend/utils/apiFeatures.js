@@ -1,11 +1,11 @@
 class ApiFeatures {
-    constructor(query, queryStr){
+    constructor(query, queryStr) {
         this.query = query
         this.queryStr = queryStr
     }
 
 
-    search(){
+    search() {
         const keyword = this.queryStr.keyword ? {
             name: {
                 $regex: this.queryStr.keyword,
@@ -15,7 +15,28 @@ class ApiFeatures {
 
         console.log(keyword)
 
-        this.query = this.query.find({...keyword});
+        this.query = this.query.find({ ...keyword });
+        return this;
+    }
+
+    filter() {
+        const queryCopy = { ...this.queryStr }
+
+        // Remove Fields For Category
+        const removeFields = ["keyword", "page", "limit"]
+
+        removeFields.forEach((key) => delete queryCopy[key])
+
+        // Filter for price and rating
+
+        console.log(queryCopy)
+
+        let queryStr = JSON.stringify(queryCopy)
+        queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`)
+
+        this.query = this.query.find(JSON.parse(queryStr))
+
+        console.log(queryStr)
         return this;
     }
 }

@@ -120,7 +120,7 @@ exports.getSingleProduct = async (req, res, next) => {
 // GET ALL PRODUCTS
 exports.getAllProduct = async (req, res) => {
     try {
-        const apiFeatures = new ApiFeatures(Product.find(), req.query).search()
+        const apiFeatures = new ApiFeatures(Product.find(), req.query).search().filter()
         const product = await apiFeatures.query;
         res.status(200).json({
             success: true,
